@@ -42,6 +42,9 @@ This is a React application (using TypeScript and Material UI) for the Outsera f
 - `yarn build` — Builds the app for production to the `build` folder.
 - `yarn test` — Runs all tests using Jest.
 - `yarn test:watch` — Runs tests in watch mode.
+- `yarn test:coverage` — Runs tests with coverage report.
+- `yarn lint` — Runs ESLint to check code quality.
+- `yarn lint:fix` — Runs ESLint and automatically fixes issues.
 
 ## Testing
 
@@ -72,6 +75,16 @@ npm run build
 ```
 
 The optimized build will be in the `build/` directory.
+
+## Code Quality Features
+
+- **TypeScript**: Full type safety with strict configuration
+- **ESLint**: Code quality and consistency enforcement
+- **Testing**: Comprehensive unit tests with Jest and React Testing Library
+- **Performance**: React.memo optimization for components
+- **Error Handling**: Centralized error handling with retry functionality
+- **Loading States**: Consistent loading indicators across the application
+- **Component Architecture**: Modular, reusable components with proper separation of concerns
 
 ## Notes
 
