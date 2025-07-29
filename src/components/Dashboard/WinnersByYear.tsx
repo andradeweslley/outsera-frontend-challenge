@@ -51,15 +51,15 @@ const WinnersByYear: React.FC<WinnersByYearProps> = ({ data, onSearch }) => {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell>No</TableCell>
+              <TableCell>ID</TableCell>
               <TableCell>Year</TableCell>
               <TableCell>Title</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {data?.map((row, index) => (
+            {data?.map((row) => (
               <TableRow key={row.id}>
-                <TableCell>{index + 1}</TableCell>
+                <TableCell>{row.id}</TableCell>
                 <TableCell>{row.year}</TableCell>
                 <TableCell>{row.title}</TableCell>
               </TableRow>
