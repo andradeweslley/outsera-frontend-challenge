@@ -59,4 +59,4 @@ const StudiosWins: React.FC<StudiosWinsProps> = ({ data }) => {
   );
 };
 
-export default StudiosWins;
+export default React.memo(StudiosWins);

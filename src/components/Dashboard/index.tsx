@@ -1,23 +1,32 @@
 import React, { useEffect } from "react";
-
 import { Box, Grid } from "@mui/material";
-import { useApi } from "../../hooks/useApi";
+import { useDashboardData } from "../../hooks/useDashboardData";
+import { useWinnersByYear } from "../../hooks/useWinnersByYear";
 import MultiWinnerYears from "./MultiWinnerYears";
 import ProducersIntervals from "./ProducersIntervals";
 import StudiosWins from "./StudiosWins";
 import WinnersByYear from "./WinnersByYear";
+import LoadingSpinner from "../common/LoadingSpinner";
+import ErrorMessage from "../common/ErrorMessage";
 
 const Dashboard: React.FC = () => {
   const {
     yearsWithMultipleWinners,
     studiosWithWinCount,
     producersIntervals,
-    winnersByYear,
+    loading: dashboardLoading,
+    error: dashboardError,
     fetchYearsWithMultipleWinners,
     fetchStudiosWithWinCount,
     fetchProducersIntervals,
+  } = useDashboardData();
+
+  const {
+    winnersByYear,
+    loading: winnersLoading,
+    error: winnersError,
     fetchWinnersByYear,
-  } = useApi();
+  } = useWinnersByYear();
 
   useEffect(() => {
     fetchYearsWithMultipleWinners();
@@ -28,6 +37,23 @@ const Dashboard: React.FC = () => {
     fetchStudiosWithWinCount,
     fetchProducersIntervals,
   ]);
+
+  if (dashboardLoading) {
+    return <LoadingSpinner message="Loading dashboard data..." />;
+  }
+
+  if (dashboardError) {
+    return (
+      <ErrorMessage
+        message={dashboardError}
+        onRetry={() => {
+          fetchYearsWithMultipleWinners();
+          fetchStudiosWithWinCount();
+          fetchProducersIntervals();
+        }}
+      />
+    );
+  }
 
   return (
     <Box sx={{ p: 3 }}>
@@ -44,7 +70,12 @@ const Dashboard: React.FC = () => {
           <ProducersIntervals data={producersIntervals || undefined} />
         </Grid>
         <Grid size={6}>
-          <WinnersByYear data={winnersByYear} onSearch={fetchWinnersByYear} />
+          <WinnersByYear
+            data={winnersByYear}
+            onSearch={fetchWinnersByYear}
+            loading={winnersLoading}
+            error={winnersError}
+          />
         </Grid>
       </Grid>
     </Box>

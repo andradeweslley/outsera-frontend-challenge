@@ -15,7 +15,9 @@ describe("MultiWinnerYears", () => {
   it("renders the component with data", () => {
     render(<MultiWinnerYears data={mockData} />);
 
-    expect(screen.getByText("Years with multiple winners")).toBeInTheDocument();
+    expect(
+      screen.getByText("List years with multiple winners")
+    ).toBeInTheDocument();
     expect(screen.getByText("1986")).toBeInTheDocument();
     expect(screen.getByText("2")).toBeInTheDocument();
     expect(screen.getByText("1990")).toBeInTheDocument();
@@ -25,7 +27,9 @@ describe("MultiWinnerYears", () => {
   it("renders the component with empty data", () => {
     render(<MultiWinnerYears data={null} />);
 
-    expect(screen.getByText("Years with multiple winners")).toBeInTheDocument();
+    expect(
+      screen.getByText("List years with multiple winners")
+    ).toBeInTheDocument();
     expect(screen.queryByText("1986")).not.toBeInTheDocument();
   });
 });

@@ -54,4 +54,4 @@ const MultiWinnerYears: React.FC<MultiWinnerYearsProps> = ({ data }) => {
   );
 };
 
-export default MultiWinnerYears;
+export default React.memo(MultiWinnerYears);

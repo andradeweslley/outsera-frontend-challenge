@@ -83,4 +83,4 @@ const ProducersIntervals: React.FC<ProducersIntervalsProps> = ({ data }) => {
   );
 };
 
-export default ProducersIntervals;
+export default React.memo(ProducersIntervals);

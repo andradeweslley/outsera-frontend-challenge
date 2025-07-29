@@ -1,19 +1,13 @@
 import React, { useEffect, useState } from "react";
-
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
-import { useApi } from "../../hooks/useApi";
+import { useMovies } from "../../hooks/useMovies";
+import LoadingSpinner from "../common/LoadingSpinner";
+import ErrorMessage from "../common/ErrorMessage";
+import MoviesFilters from "./MoviesFilters";
 
 const MoviesList: React.FC = () => {
-  const { movies, fetchMovies } = useApi();
+  const { movies, loading, error, fetchMovies } = useMovies();
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: 15,
@@ -42,38 +36,37 @@ const MoviesList: React.FC = () => {
     },
   ];
 
+  if (loading) {
+    return <LoadingSpinner message="Loading movies..." />;
+  }
+
+  if (error) {
+    return (
+      <ErrorMessage
+        message={error}
+        onRetry={() =>
+          fetchMovies({
+            page: paginationModel.page,
+            size: paginationModel.pageSize,
+            year: yearFilter || undefined,
+            winner: winnerFilter !== null ? winnerFilter : undefined,
+          })
+        }
+      />
+    );
+  }
+
   return (
     <Box sx={{ p: 3, height: "100%" }}>
       <Typography variant="h4" gutterBottom>
         List movies
       </Typography>
-      <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
-        <TextField
-          label="Filter by year"
-          type="number"
-          variant="outlined"
-          size="small"
-          value={yearFilter || ""}
-          onChange={(e) =>
-            setYearFilter(e.target.value ? parseInt(e.target.value) : null)
-          }
-        />
-        <FormControl size="small" sx={{ minWidth: 120 }}>
-          <InputLabel>Winner</InputLabel>
-          <Select
-            value={winnerFilter === null ? "" : winnerFilter ? "true" : "false"}
-            label="Winner"
-            onChange={(e) => {
-              const value = e.target.value as string;
-              setWinnerFilter(value === "" ? null : value === "true");
-            }}
-          >
-            <MenuItem value="">All</MenuItem>
-            <MenuItem value="true">Yes</MenuItem>
-            <MenuItem value="false">No</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
+      <MoviesFilters
+        yearFilter={yearFilter}
+        winnerFilter={winnerFilter}
+        onYearChange={setYearFilter}
+        onWinnerChange={setWinnerFilter}
+      />
       <Box sx={{ height: 600 }}>
         <DataGrid
           rows={movies?.content || []}

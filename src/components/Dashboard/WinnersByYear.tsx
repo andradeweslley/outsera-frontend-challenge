@@ -14,13 +14,22 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { type Movie } from "../../types";
+import LoadingSpinner from "../common/LoadingSpinner";
+import ErrorMessage from "../common/ErrorMessage";
 
 interface WinnersByYearProps {
   data: Movie[] | null;
   onSearch: (year: number) => void;
+  loading?: boolean;
+  error?: string | null;
 }
 
-const WinnersByYear: React.FC<WinnersByYearProps> = ({ data, onSearch }) => {
+const WinnersByYear: React.FC<WinnersByYearProps> = ({
+  data,
+  onSearch,
+  loading = false,
+  error = null,
+}) => {
   const [year, setYear] = useState("");
 
   const handleSearch = () => {
@@ -43,39 +52,52 @@ const WinnersByYear: React.FC<WinnersByYearProps> = ({ data, onSearch }) => {
           onChange={(e) => setYear(e.target.value)}
           type="number"
         />
-        <IconButton color="primary" onClick={handleSearch}>
+        <IconButton color="primary" onClick={handleSearch} disabled={loading}>
           <Search />
         </IconButton>
       </Box>
-      <TableContainer>
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Year</TableCell>
-              <TableCell>Title</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data?.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{row.id}</TableCell>
-                <TableCell>{row.year}</TableCell>
-                <TableCell>{row.title}</TableCell>
-              </TableRow>
-            ))}
-            {data && data.length === 0 && (
+
+      {loading && <LoadingSpinner message="Searching..." size={30} />}
+
+      {error && (
+        <ErrorMessage
+          message={error}
+          onRetry={() => year && onSearch(Number(year))}
+          severity="warning"
+        />
+      )}
+
+      {!loading && !error && (
+        <TableContainer>
+          <Table size="small">
+            <TableHead>
               <TableRow>
-                <TableCell colSpan={3} align="center">
-                  No data available
-                </TableCell>
+                <TableCell>ID</TableCell>
+                <TableCell>Year</TableCell>
+                <TableCell>Title</TableCell>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {data?.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell>{row.id}</TableCell>
+                  <TableCell>{row.year}</TableCell>
+                  <TableCell>{row.title}</TableCell>
+                </TableRow>
+              ))}
+              {data && data.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={3} align="center">
+                    No data available
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </Paper>
   );
 };
 
-export default WinnersByYear;
+export default React.memo(WinnersByYear);
